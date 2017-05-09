@@ -71,8 +71,6 @@ module Seek
         end
       end
 
-
-
       def published
         respond_to do |format|
           format.html { render template: 'assets/publishing/published' }
@@ -103,7 +101,7 @@ module Seek
       end
 
       def set_asset
-        unless (controller_name == 'people')
+        unless controller_name == 'people'
           @asset = controller_name.classify.constantize.find(params[:id])
         end
       rescue ActiveRecord::RecordNotFound
@@ -147,8 +145,6 @@ module Seek
         end
       end
 
-
-
       def request_publish_approval
         User.with_current_user current_user do
           object = object_for_request
@@ -169,7 +165,7 @@ module Seek
 
           recipient_items.keys.each do |recipient|
             begin
-              Mailer.send(delivery_method, recipient, User.current_user.person, recipient_items[recipient]).deliver
+              Mailer.send(delivery_method, recipient, User.current_user.person, recipient_items[recipient]).deliver_now
             rescue Exception => e
               Rails.logger.error("Error sending notification email to the owner #{gatekeeper.name} - #{e.message}")
             end
@@ -212,7 +208,7 @@ module Seek
         end
       end
 
-      def params_for_published_items published_items
+      def params_for_published_items(published_items)
         published_items.collect { |item| "#{item.class.name},#{item.id}" }
       end
 
@@ -248,9 +244,9 @@ module Seek
 
       def is_gatekeeper_approval_required?(object)
         params[:policy_attributes] &&
-            params[:policy_attributes][:access_type].to_i > Policy::NO_ACCESS &&
-            object.gatekeeper_required? &&
-            !User.current_user.person.is_asset_gatekeeper_of?(object)
+          params[:policy_attributes][:access_type].to_i > Policy::NO_ACCESS &&
+          object.gatekeeper_required? &&
+          !User.current_user.person.is_asset_gatekeeper_of?(object)
       end
 
       def was_item_unpublished?(object)

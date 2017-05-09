@@ -7,7 +7,7 @@ class HelpDictionaryTest < ActiveSupport::TestCase
 
   test 'all_links' do
     refute_empty @dic.all_links
-    assert_include @dic.all_links, 'http://docs.seek4science.org/tech/investigation-checksum.html'
+    assert_includes @dic.all_links, 'http://docs.seek4science.org/tech/investigation-checksum.html'
   end
 
   test 'help link' do
@@ -22,7 +22,7 @@ class HelpDictionaryTest < ActiveSupport::TestCase
     begin
       RestClient.head('http://www.google.com')
     rescue Exception => e
-      skip "* Possible network issue - Skipping help link checks *"
+      skip '* Possible network issue - Skipping help link checks *'
     else
       @dic.all_links.each do |link|
         begin

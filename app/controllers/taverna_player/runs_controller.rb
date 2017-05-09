@@ -1,6 +1,7 @@
 module TavernaPlayer
   class RunsController < TavernaPlayer::ApplicationController
     include TavernaPlayer::Concerns::Controllers::RunsController
+    include Seek::AssetsStandardControllerActions
 
     before_filter :workflows_enabled?
 
@@ -17,11 +18,7 @@ module TavernaPlayer
     def update
       @run.update_attributes(params[:run])
 
-      if params[:policy_attributes]
-        @run.policy_or_default
-        @run.policy.set_attributes_with_sharing(params[:policy_attributes])
-        @run.save
-      end
+      update_sharing_policies @run
 
       respond_with(@run)
     end
@@ -68,7 +65,7 @@ module TavernaPlayer
         respond_with(@run, :status => 400)
       else
         if Seek::Config.email_enabled
-          Mailer.report_run_problem(current_person, @run).deliver
+          Mailer.report_run_problem(current_person, @run).deliver_now
           @run.reported = true
           @run.save
           flash[:notice] = "Your report has been submitted to the support team, thank you."

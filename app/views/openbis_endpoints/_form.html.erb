@@ -1,5 +1,3 @@
-<%= javascript_include_tag :uri %>
-
 <%= form_for([@project,@openbis_endpoint],html:{id:'openbis-space-form'}) do |f| %>
 
     <%= f.error_messages %>
@@ -45,6 +43,11 @@
     </div>
 
     <%= content_tag(:button,type:'button',class:'btn btn-primary',id:'fetch-spaces-button'){"Fetch Spaces"} %>
+
+    <div class="form-group">
+      <label>Default sharing permissions</label>
+      <%= render :seek_partial => "sharing/form" %>
+    </div>
 
     <%= f.submit(@openbis_endpoint.new_record? ? "Add" : "Update",
                  disabled:true ,

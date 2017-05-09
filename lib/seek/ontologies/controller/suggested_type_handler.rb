@@ -19,7 +19,6 @@ module Seek
           @suggested_type.term_type = params[:term_type]
           respond_to do |format|
             format.html { render template: 'suggested_types/new' }
-            format.js { render template: 'suggested_types/new_popup', layout: false }
             format.xml { render xml: @suggested_type }
           end
         end
@@ -29,7 +28,6 @@ module Seek
           @suggested_type.term_type = params[:term_type]
           respond_to do |format|
             format.html { render template: 'suggested_types/edit' }
-            format.js { render template: 'suggested_types/edit' }
             format.xml { render xml: @suggested_type }
           end
         end
@@ -41,15 +39,12 @@ module Seek
         end
 
         def create
-          attributes = params[controller_name.singularize.to_sym]
-          @suggested_type = model_class.new(attributes)
+          @suggested_type = model_class.new(type_params)
           @suggested_type.contributor_id = User.current_user.try(:person_id)
           saved = @suggested_type.save
           respond_to do |format|
-            format.js { render template: 'suggested_types/create' }
-
             if saved
-              set_successful_flash_message("created")
+              set_successful_flash_message('created')
               format.html { redirect_to(action: 'manage') }
               format.xml { head :ok }
             else
@@ -61,12 +56,11 @@ module Seek
 
         def update
           @suggested_type = eval("@#{controller_name.singularize}")
-          @suggested_type.update_attributes(params[controller_name.singularize.to_sym])
+          @suggested_type.update_attributes(type_params)
           saved = @suggested_type.save
           respond_to do |format|
-            format.js { render template: 'suggested_types/create' }
             if saved
-              set_successful_flash_message("updated")
+              set_successful_flash_message('updated')
               format.html { redirect_to(action: 'manage') }
               format.xml { head :ok }
             else
@@ -81,7 +75,7 @@ module Seek
           respond_to do |format|
             if @suggested_type.can_destroy?
               @suggested_type.destroy
-              set_successful_flash_message("destroyed")
+              set_successful_flash_message('destroyed')
               format.xml { head :ok }
             else
               flash[:error] = @suggested_type.destroy_errors.join('<br/>').html_safe
@@ -95,7 +89,11 @@ module Seek
           flash[:notice] = "#{@suggested_type.humanize_term_type} type #{@suggested_type.label} was successfully #{action}."
         end
 
+        private
 
+        def type_params
+          params.require(controller_name.singularize.to_sym).permit(:label, :parent_uri)
+        end
       end
     end
   end

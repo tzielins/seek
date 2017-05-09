@@ -27,7 +27,7 @@
     %>
     <% if can_download_asset?(asset, params[:code]) -%>
         <%= download_or_link_button display_asset, path, display_asset.single_content_blob.try(:url), human_name,
-                                    :class => 'btn btn-default' %>
+                                    :class => 'btn btn-default',disabled:asset.download_disabled? %>
 
         <% if asset.is_a?(DataFile) && display_asset.contains_extractable_spreadsheet? %>
             <%= button_link_to('Explore', 'spreadsheet', polymorphic_path(asset, :version => version, :action => :explore, :code => params[:code])) %>
@@ -43,23 +43,20 @@
 <% end -%>
 
 <%= admin_dropdown do %>
-    <% edit_verb = 'edit' %>
-    <% if asset.can_manage? -%>
+    <% edit_verb = asset.can_manage? ? 'manage' : 'edit' %>
+
+    <% if asset.can_edit? -%>
         <% if asset.versioned? -%>
             <li>
               <% if asset.new_version_supported? %>
                   <%= link_to_function image("new")+" Upload new version", visual_effect(:toggle_appear, "upload_new_version_form") %>
-                  <% else %>
+              <% else %>
                   <%= link_to_function image("new")+" Upload new version", nil,disabled:true, class:'disabled' %>
-                  <% end %>
+              <% end %>
 
             </li>
         <% end -%>
 
-        <% edit_verb = 'manage' %>
-    <% end %>
-
-    <% if asset.can_edit? -%>
         <li><%= image_tag_for_key(edit_verb, polymorphic_path(asset,:action=>:edit), nil, nil, "#{edit_verb.capitalize} #{human_name}") -%></li>
     <% end -%>
 

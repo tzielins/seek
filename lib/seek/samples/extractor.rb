@@ -50,9 +50,7 @@ module Seek
             f.write(Marshal.dump(v))
             v
           end
-        else
-          nil
-        end
+                end
       end
 
       def self.encode(values)
@@ -64,7 +62,7 @@ module Seek
       def self.decode(values)
         if values
           values.map do |value|
-            Sample.new.tap { |s| s.assign_attributes(value, without_protection: true) }
+            Sample.new.tap { |s| s.assign_attributes(value) }
           end
         end
       end

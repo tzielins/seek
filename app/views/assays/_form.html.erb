@@ -1,4 +1,3 @@
-<%= javascript_include_tag 'strain' -%>
 <%
    @assay_text=@assay.is_modelling? ? "#{t('assays.modelling_analysis')}" : "#{t('assays.assay')}"
    @assay_type_text=@assay.is_modelling? ? "biological problem addressed" : "#{t('assays.assay').downcase} type"
@@ -115,13 +114,12 @@
     <%= f.submit button_text, :id => "assay_submit_btn",
                  :onclick => "javascript: previewPermissions();return(false);", :class => 'btn btn-primary' -%>
 <% else %>
-    <%= f.submit button_text, :disable_with=>disabled_text, :id => "assay_submit_btn",
+    <%= f.submit button_text, data: { disable_with: disabled_text }, :id => "assay_submit_btn",
                  :onclick => "javascript: $('assay_submit_btn').form.submit();return(false);", :class => 'btn btn-primary' -%>
 <% end %>
  or <%= cancel_button(@assay.id ? assay_path(@assay.id) : assays_path) -%>
 
 <script type="text/javascript">
-
     function hide_organism_form(){
         Effect.Fade('add_organism_form');
     }
@@ -149,4 +147,21 @@
         updateOrganisms();
     });
     <% end %>
+</script>
+<script>
+  var projectsLookup = <%= Hash[Study.all_authorized_for(:edit).map { |s| [s.id, s.projects.map { |p| { id: p.id, title: p.title } }] }].to_json.html_safe -%>;
+
+  $j(document).ready(function () {
+    $j('#assay_study_id').change(function () {
+      Sharing.removeMandatoryProjectPermissions();
+      if ($j(this).val()) {
+        var projects = projectsLookup[parseInt($j(this).val())];
+        if (projects && projects.length) {
+          for (var i = 0; i < projects.length; i++) {
+            Sharing.addPermissionForProject(projects[i]);
+          }
+        }
+      }
+    });
+  });
 </script>

@@ -7,8 +7,6 @@ module Seek
     include Seek::PreviewHandling
     include Seek::AssetsStandardControllerActions
 
-
-
     def find_display_asset(asset = eval("@#{controller_name.singularize}"))
       requested_version = params[:version] || asset.latest_version.version
       found_version = asset.find_version(requested_version)
@@ -66,7 +64,7 @@ module Seek
       resource = class_for_controller_name.find(params[:id])
       details = params[:details]
       mail = Mailer.request_resource(current_user, resource, details)
-      mail.deliver
+      mail.deliver_now
 
       render :update do |page|
         html = "An email has been sent on your behalf to <b>#{resource.managers_names}</b> requesting the file <b>#{h(resource.title)}</b>."

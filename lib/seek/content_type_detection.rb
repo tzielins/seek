@@ -74,15 +74,15 @@ module Seek
     end
 
     def is_image_viewable?(blob = self)
-      !( IMAGE_VIEWABLE_FORMAT & mime_extensions(blob.content_type) ).empty?
+      !(IMAGE_VIEWABLE_FORMAT & mime_extensions(blob.content_type)).empty?
     end
 
     def is_pdf_viewable?(blob = self)
-      !( PDF_VIEWABLE_FORMAT & mime_extensions(blob.content_type) ).empty?
+      !(PDF_VIEWABLE_FORMAT & mime_extensions(blob.content_type)).empty?
     end
 
     def is_pdf?(blob = self)
-      mime_extensions(blob.content_type).include?("pdf")
+      mime_extensions(blob.content_type).include?('pdf')
     end
 
     def unknown_file_type?(blob = self)
@@ -119,12 +119,12 @@ module Seek
       !blob.file_size.nil? && blob.file_size < max_extractable_spreadsheet_size
     end
 
-    #the max_indexable_text_size in bytes, defaulting to 10Mb
+    # the max_indexable_text_size in bytes, defaulting to 10Mb
     def max_indexible_text_size
       (Seek::Config.max_indexable_text_size || 10).to_i * 1024 * 1024
     end
 
-    #the max_extractable_spreadsheet_size in bytes, defaulting to 10Mb
+    # the max_extractable_spreadsheet_size in bytes, defaulting to 10Mb
     def max_extractable_spreadsheet_size
       (Seek::Config.max_extractable_spreadsheet_size || 10).to_i * 1024 * 1024
     end
@@ -155,7 +155,10 @@ module Seek
     end
 
     def set_content_type_according_to_url
-      type = retrieve_content_type_from_url
+      type = content_type.blank? ? retrieve_content_type_from_url : content_type
+
+      # strip out the charset, e.g for content-type  "text/html; charset=utf-8"
+      type = type.gsub(/;.*/, '').strip
       if type == 'text/html'
         self.is_webpage = true
         self.content_type = type
@@ -163,7 +166,11 @@ module Seek
       self.content_type = type if unknown_file_type?
     rescue => exception
       self.is_webpage = false
-      Rails.logger.warn("There was a problem reading the headers for the URL of the content blob = #{url}")
+      Rails.logger.warn("There was a problem reading the headers for the URL of the content blob: #{url}\n#{exception.class.name}\n\t#{exception.backtrace.join("\n\t")}")
+    end
+
+    def retrieve_content_type_from_url
+      remote_headers[:content_type] || ''
     end
   end
 end

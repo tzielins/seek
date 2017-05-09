@@ -37,7 +37,7 @@ module Seek
       if Seek::Config.email_enabled && subscribers_are_notified_of?(activity_log.action)
         subscriptions.each do |subscription|
           if !subscription.person.user.nil? && subscription.person.receive_notifications? && subscription.immediately? && can_view?(subscription.person.user)
-            SubMailer.send_immediate_subscription(subscription.person, activity_log).deliver
+            SubMailer.send_immediate_subscription(subscription.person, activity_log).deliver_now
           end
         end
       end
@@ -49,17 +49,15 @@ module Seek
 
     def set_default_subscriptions(projects)
       unless projects.empty?
-        Person.scoped(include: :project_subscriptions).each do |person|
+        Person.includes(:project_subscriptions).each do |person|
           project_subscriptions = person.project_subscriptions
           project_subscriptions.each do |ps|
-            if projects.include? ps.project
-              subscriptions.create(person: person, project_subscription_id: ps.id) if !ps.unsubscribed_types.include?(self.class.name) && !self.subscribed?(person)
-              # also build subscriptions for studies and assays associating with this investigation
-              if self.is_a?(Investigation)
-                (studies | assays).each do |item|
-                  item.subscriptions << Subscription.create(person: person, project_subscription_id: ps.id) unless item.subscribed?(person)
-                end
-              end
+            next unless projects.include? ps.project
+            subscriptions.create(person: person, project_subscription_id: ps.id) if !ps.unsubscribed_types.include?(self.class.name) && !self.subscribed?(person)
+            # also build subscriptions for studies and assays associating with this investigation
+            next unless self.is_a?(Investigation)
+            (studies | assays).each do |item|
+              item.subscriptions << Subscription.create(person: person, project_subscription_id: ps.id) unless item.subscribed?(person)
             end
           end
         end

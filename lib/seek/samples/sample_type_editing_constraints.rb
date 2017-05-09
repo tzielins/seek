@@ -38,12 +38,12 @@ module Seek
         end
       end
 
-      #whether a new attribtue can be created
+      # whether a new attribtue can be created
       def allow_new_attribute?
         !samples?
       end
 
-      #whether the name of the attribute can be changed
+      # whether the name of the attribute can be changed
       def allow_name_change?(attr)
         attr = attr.accessor_name if attr.is_a?(SampleAttribute)
         if attr
@@ -53,7 +53,7 @@ module Seek
         end
       end
 
-      #whether the type for the attribute can be changed
+      # whether the type for the attribute can be changed
       def allow_type_change?(attr)
         attr = attr.accessor_name if attr.is_a?(SampleAttribute)
         if attr
@@ -87,13 +87,13 @@ module Seek
       end
 
       def do_analysis
-        Rails.cache.fetch(cache_key) do
+        #Rails.cache.fetch(cache_key) do
           analysis = {}
           attribute_keys.each do |attr|
             analysis[attr] = analyse_for_attribute(attr)
           end
           analysis
-        end
+        #end
       end
 
       def analyse_for_attribute(attr)

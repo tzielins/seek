@@ -1,5 +1,3 @@
-require 'grouped_pagination'
-
 class Person < ActiveRecord::Base
 
   include Seek::Rdf::RdfGeneration
@@ -11,7 +9,7 @@ class Person < ActiveRecord::Base
   alias_attribute :title, :name
 
   acts_as_yellow_pages
-  scope :default_order, order("last_name, first_name")
+  scope :default_order, -> { order("last_name, first_name") }
 
   before_save :first_person_admin_and_add_to_default_project
   before_destroy :clean_up_and_assign_permissions
@@ -28,20 +26,20 @@ class Person < ActiveRecord::Base
 
   has_and_belongs_to_many :disciplines
 
-  has_many :group_memberships, :dependent => :destroy
-  has_many :work_groups, :through=>:group_memberships
+  has_many :group_memberships, dependent: :destroy, inverse_of: :person
+  has_many :work_groups, through: :group_memberships, inverse_of: :people
 
-  has_many :former_group_memberships, :class_name => 'GroupMembership',
-           :conditions => proc { ["time_left_at IS NOT NULL AND time_left_at <= ?", Time.now] }, :dependent => :destroy
+  has_many :former_group_memberships, -> { where("time_left_at IS NOT NULL AND time_left_at <= ?", Time.now) },
+           :class_name => 'GroupMembership', :dependent => :destroy
   has_many :former_work_groups, :class_name => 'WorkGroup', :through => :former_group_memberships,
            :source => :work_group
 
-  has_many :current_group_memberships, :class_name => 'GroupMembership',
-           :conditions =>  proc { ["time_left_at IS NULL OR time_left_at > ?", Time.now] }, :dependent => :destroy
+  has_many :current_group_memberships, -> { where("time_left_at IS NULL OR time_left_at > ?", Time.now) },
+           :class_name => 'GroupMembership', :dependent => :destroy
   has_many :current_work_groups, :class_name => 'WorkGroup', :through => :current_group_memberships,
            :source => :work_group
 
-  has_many :institutions,:through => :work_groups, :uniq => true
+  has_many :institutions, -> { uniq }, :through => :work_groups
 
   has_many :favourite_group_memberships, :dependent => :destroy
   has_many :favourite_groups, :through => :favourite_group_memberships
@@ -76,11 +74,10 @@ class Person < ActiveRecord::Base
     end
   end if Seek::Config.solr_enabled
 
-  scope :with_group, :include=>:group_memberships, :conditions=>"group_memberships.person_id IS NOT NULL"
-  scope :without_group, :include=>:group_memberships, :conditions=>"group_memberships.person_id IS NULL"
-  scope :registered,:include=>:user,:conditions=>"users.person_id != 0"
-
-  scope :not_registered,:include=>:user,:conditions=>"users.person_id IS NULL"
+  scope :with_group, -> { includes(:group_memberships).where('group_memberships.person_id IS NOT NULL').references(:group_memberships) }
+  scope :without_group, -> { includes(:group_memberships).where('group_memberships.person_id IS NULL').references(:group_memberships) }
+  scope :registered, -> { includes(:user).where('users.person_id != 0').references(:users) }
+  scope :not_registered, -> { includes(:user).where('users.person_id IS NULL').references(:users) }
 
   alias_attribute :webpage,:web_page
 
@@ -457,7 +454,6 @@ class Person < ActiveRecord::Base
         projects_in_common = projects & item.projects
         pis = projects_in_common.collect{|p| p.pis}.flatten.uniq
         pis.reject!{|pi| pi.id == id}
-        item.policy_or_default
         policy = item.policy
         unless pis.blank?
           pis.each do |pi|
