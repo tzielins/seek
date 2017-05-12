@@ -19,8 +19,6 @@ require 'authenticated_test_helper'
 require 'mock_helper'
 require 'html_helper'
 
-Minitest::Test.i_suck_and_my_tests_are_order_dependent!
-
 module ActionView
   class Renderer
     def self.get_alternative(key)
