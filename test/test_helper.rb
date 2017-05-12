@@ -18,6 +18,9 @@ require 'tmpdir'
 require 'authenticated_test_helper'
 require 'mock_helper'
 require 'html_helper'
+require 'minitest/reporters'
+
+Minitest::Reporters.use! [Minitest::Reporters::SpecReporter.new()]
 
 module ActionView
   class Renderer
