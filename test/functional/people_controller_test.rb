@@ -320,18 +320,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  def test_current_user_shows_seek_id
-    login_as(:quentin)
-    get :show, id: people(:quentin_person)
-    assert_select '.box_about_actor p', text: /Seek ID: /m
-    assert_select '.box_about_actor p', text: /Seek ID: .*#{people(:quentin_person).id}/m, count: 1
-  end
-
-  def test_not_current_user_doesnt_show_seek_id
-    get :show, id: people(:aaron_person)
-    assert_select '.box_about_actor p', text: /Seek ID :/, count: 0
-  end
-
   def test_current_user_shows_login_name
     current_user = Factory(:person).user
     login_as(current_user)
@@ -1721,6 +1709,41 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
     assert_select '#resource-count-stats', count: 0
   end
+
+  test 'autocomplete' do
+    Factory(:brand_new_person, first_name: 'Xavier', last_name: 'Johnson')
+    Factory(:brand_new_person, first_name: 'Xavier', last_name: 'Bohnson')
+    Factory(:brand_new_person, first_name: 'Charles', last_name: 'Bohnson')
+    Factory(:brand_new_person, first_name: 'Jon Bon', last_name: 'Jovi')
+    Factory(:brand_new_person, first_name: 'Jon', last_name: 'Bon Jovi')
+
+    get :typeahead, format: :json, query: 'xav'
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert_equal 2, res.length
+    assert_includes res.map { |r| r['name'] }, 'Xavier Johnson'
+    assert_includes res.map { |r| r['name'] }, 'Xavier Bohnson'
+
+    get :typeahead, format: :json, query: 'bohn'
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert_equal 2, res.length
+    assert_includes res.map { |r| r['name'] }, 'Charles Bohnson'
+    assert_includes res.map { |r| r['name'] }, 'Xavier Bohnson'
+
+    get :typeahead, format: :json, query: 'xavier bohn'
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert_equal 1, res.length
+    assert_includes res.map { |r| r['name'] }, 'Xavier Bohnson'
+
+    get :typeahead, format: :json, query: 'jon bon'
+    assert_response :success
+    res = JSON.parse(response.body)
+    assert_equal 2, res.length
+    assert_equal res.map { |r| r['name'] }.uniq, ['Jon Bon Jovi']
+  end
+
 
   def mask_for_admin
     Seek::Roles::Roles.instance.mask_for_role('admin')
