@@ -19,8 +19,9 @@ require 'authenticated_test_helper'
 require 'mock_helper'
 require 'html_helper'
 require 'minitest/reporters'
+require 'minitest'
 
-Minitest::Reporters.use! [Minitest::Reporters::SpecReporter.new()]
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new]
 
 module ActionView
   class Renderer
