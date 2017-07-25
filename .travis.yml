@@ -6,9 +6,6 @@ rvm:
 jdk:
   - openjdk7
 
-services:
-  - mysql
-
 sudo: false
 
 cache: bundler
