@@ -360,18 +360,18 @@ class OpenbisEndpointsControllerTest < ActionController::TestCase
             username: 'wibble',
             password: 'wobble' },
         format: :json
-    assert_response :redirect
+    assert_response 400
     refute @response.body.include?('true')
 
     # none project member cannot
     project = Factory(:project)
     get :test_endpoint, project_id: project.id, as_endpoint: 'https://openbis-api.fair-dom.org/openbis/openbis',
-        dss_endpoint: 'https://openbis-api.fair-dom.org/datastore_server',
-        web_endpoint: 'https://openbis-api.fair-dom.org/openbis',
-        username: 'wibble',
-        password: 'wobble',
-        format: :json
-    assert_response :redirect
+                        dss_endpoint: 'https://openbis-api.fair-dom.org/datastore_server',
+                        web_endpoint: 'https://openbis-api.fair-dom.org/openbis',
+                        username: 'wibble',
+                        password: 'wobble',
+                        format: :json
+    assert_response 400
     refute @response.body.include?('true')
   end
 
