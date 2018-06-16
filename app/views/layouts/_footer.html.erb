@@ -1,36 +1,51 @@
 <% logged_in?? cache_name = 'footer' : cache_name = 'footer1' %>
 
+
 <% cache cache_name, skip_digest: true do -%>
     <div id="ft">
+      <div id="ft2">
+        <div class="container">
+          &nbsp;
+        </div>
+      </div>
       <div class="container">
+        <% if false # TZ disabled menu block  %>
         <div id="seek-credit">
           <a href="http://www.seek4science.org" target="_blank" class="powered-by">
-            Powered by<br/>
+            Powered by Seek<br/>
             <%= image(:seek_logo, width: 64, height: 64) %>
           </a>
           <span class="subtle"><%= version_text -%></span>
         </div>
+        <% end  # TZ disabled menu block  %>
+        <% if false # TZ disabled menu block  %>
+          <div class="ft-info">
+              <% if Seek::Config.dm_project_link != Seek::Config.project_link %>
+                  <%= link_to "About #{Seek::Config.dm_project_name}", Seek::Config.dm_project_link, :target => '_blank' %> |
+              <% end %>
+              <%= link_to Seek::Config.project_name, Seek::Config.project_link, :target => '_blank' %> |
+              <% if logged_in_and_registered? %>
+                  <%= link_to 'Provide feedback', feedback_home_path -%> |
+              <% end %>
+              <%= link_to 'Funding and Programmes', funding_home_path, :target => '_blank' -%> |
+              <%= link_to 'Credits', 'http://docs.seek4science.org/credits', :target => '_blank' -%>
+              <% if Seek::Config.imprint_enabled %>
+                  | <%= link_to("Imprint", imprint_home_path) %>
+              <% end %>
+          </div>
+        <% end  # TZ disabled menu block  %>
         <div class="ft-info">
-          <% if Seek::Config.dm_project_link != Seek::Config.project_link %>
-              <%= link_to "About #{Seek::Config.dm_project_name}", Seek::Config.dm_project_link, :target => '_blank' %> |
-          <% end %>
-          <%= link_to Seek::Config.project_name, Seek::Config.project_link, :target => '_blank' %> |
-          <% if logged_in_and_registered? %>
-              <%= link_to 'Provide feedback', feedback_home_path -%> |
-          <% end %>
-          <%= link_to 'Funding and Programmes', funding_home_path, :target => '_blank' -%> |
-          <%= link_to 'Credits', 'http://docs.seek4science.org/credits', :target => '_blank' -%>
-          <% if Seek::Config.imprint_enabled %>
-              | <%= link_to("Imprint", imprint_home_path) %>
-          <% end %>
-        </div>
-        <div class="ft-info">
-          Copyright &copy; 2008 - 2018
-          <%= link_to "The University of Manchester", "http://www.manchester.ac.uk/", :target => '_blank' %> and
-          <%= link_to "HITS gGmbH", "http://www.h-its.org/", :target => '_blank' %>
-          <% if Seek::Config.copyright_addendum_enabled  %>
-              <br/><%= Seek::Config.copyright_addendum_content.html_safe%>
-          <% end %>
+          This resource was funded by the Wellcome Trust grant 202769/Z/16/Z
+          <span style="padding: 1em;"><%= image(:funder_wellcome, width: 100) %></span>
+
+          <% if false # TZ disabled menu block  %>
+            Copyright &copy; 2008 - 2018
+            <%= link_to "The University of Manchester", "http://www.manchester.ac.uk/", :target => '_blank' %> and
+            <%= link_to "HITS gGmbH", "http://www.h-its.org/", :target => '_blank' %>
+            <% if Seek::Config.copyright_addendum_enabled  %>
+                <br/><%= Seek::Config.copyright_addendum_content.html_safe%>
+            <% end %>
+          <% end  # TZ disabled menu block  %>
         </div>
       </div>
     </div>

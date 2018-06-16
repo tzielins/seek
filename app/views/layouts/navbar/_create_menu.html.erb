@@ -36,21 +36,27 @@
         <li><%= link_to "Publication", new_publication_path %></li>
         <li><%= link_to t("document"), new_document_path %></li>
 
-        <li role="presentation" class="dropdown-header"><%= t("menu.activities") -%></li>
-        <li><%= link_to t("presentation"), new_presentation_path %></li>
-        <% if Seek::Config.events_enabled %>
-            <li><%= link_to t("event"), new_event_path %></li>
-        <% end %>
+        <% if false # TZ disabled menu block  %>
+          <li role="presentation" class="dropdown-header"><%= t("menu.activities") -%></li>
+          <li><%= link_to t("presentation"), new_presentation_path %></li>
+          <% if Seek::Config.events_enabled %>
+              <li><%= link_to t("event"), new_event_path %></li>
+          <% end %>
+        <% end  # TZ disabled menu block  %>
 
-        <li role="presentation" class="dropdown-header"><%= t("menu.samples") -%></li>
-        <% if Sample.can_create? %>
-            <li><%= link_to("Sample", select_sample_types_path) %></li>
-        <% end %>
-        <% if SampleType.can_create? %>
-            <li><%= link_to("Sample Type", new_sample_type_path) %></li>
-        <% end %>
-        <li><%= link_to("Strain", new_strain_path) %></li>
+        <% if false # TZ disabled menu block  %>
+          <li role="presentation" class="dropdown-header"><%= t("menu.samples") -%></li>
+          <% if Sample.can_create? %>
+              <li><%= link_to("Sample", select_sample_types_path) %></li>
+          <% end %>
+          <% if SampleType.can_create? %>
+              <li><%= link_to("Sample Type", new_sample_type_path) %></li>
+          <% end %>
+          <li><%= link_to("Strain", new_strain_path) %></li>
+        <% end  # TZ disabled menu block  %>
+
         <% if can_create_organisms? %>
+            <li role="presentation" class="dropdown-header">Biology</li>
             <li><%= link_to "Organism", new_organism_path %></li>
         <% end %>
 

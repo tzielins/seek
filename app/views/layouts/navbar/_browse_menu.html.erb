@@ -28,17 +28,20 @@
     <li><%= link_to "Publications", publications_path %></li>
     <li><%= link_to t("document").pluralize, documents_path %></li>
 
-    <li role="presentation" class="dropdown-header"><%= t("menu.activities") -%></li>
-    <li><%= link_to t("presentation").pluralize, presentations_path %></li>
-    <% if Seek::Config.events_enabled %>
-        <li><%= link_to t("event").pluralize, events_path %></li>
-    <% end %>
-    <li role="presentation" class="dropdown-header"><%= t("menu.samples") -%></li>
-    <% if Seek::Config.samples_enabled %>
-      <li><%= link_to("Sample types", sample_types_path) %></li>
-    <% end %>
-    <% if Seek::Config.organisms_enabled %>
-        <li><%= link_to "Organisms", organisms_path %></li>
-    <% end %>
+    <% if false # TZ disabled menu block  %>
+      <li role="presentation" class="dropdown-header"><%= t("menu.activities") -%></li>
+      <li><%= link_to t("presentation").pluralize, presentations_path %></li>
+      <% if Seek::Config.events_enabled %>
+          <li><%= link_to t("event").pluralize, events_path %></li>
+      <% end %>
+      <li role="presentation" class="dropdown-header"><%= t("menu.samples") -%></li>
+      <% if Seek::Config.samples_enabled %>
+        <li><%= link_to("Sample types", sample_types_path) %></li>
+      <% end %>
+      <% if Seek::Config.organisms_enabled %>
+          <li><%= link_to "Organisms", organisms_path %></li>
+      <% end %>
+    <% end # TZ disabled menu block  %>
+
   </ul>
 </li>

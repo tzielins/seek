@@ -1,0 +1,69 @@
+
+a {
+    color: #EA8A0A;
+}
+
+a:hover, a:focus {
+    color: #a14c11;
+}
+
+nav.navbar {
+    min-height: 100px;
+    /* background-color: #706761; */
+    /*background-color: rgba(8,0,26,.5);
+    background-color: #b7634b;*/
+    background-color: #823f34;
+}
+
+.navbar-default .navbar-nav li a {
+    color: #F9B862;
+}
+
+.navbar-default .navbar-nav li a:hover,
+.navbar-default .navbar-nav li a:focus {
+    color: white;
+}
+
+ul.dropdown-menu {
+    background-color: #f5f5f5;
+}
+
+.navbar-default .navbar-nav .dropdown-menu li a:hover,
+.navbar-default .navbar-nav .dropdown-menu li a:focus {
+    color: #837f8c;
+}
+
+div.panel.panel-default div.panel-heading, .well,
+#isa-graph.panel.panel-default div#node_info,
+.isa-footer
+{
+    /*background-color: #fbbe7e;
+    background-color: #ebd3b9;*/
+    background-color: #fff8e6;
+}
+
+
+#ft2 {
+    /*background-color: #837f8c;*/
+    background-color: #823f34;
+
+    font-size: smaller;
+    margin-bottom: 1em;
+}
+
+#ft {
+    background-color: white;
+}
+
+#homepage {
+    color: rgba(8,0,26,.7);
+    margin-bottom: 2em;
+
+}
+
+#homepage h2 {
+    text-align: center;
+    font-size: 40px;
+    line-height: 120%;
+    margin-bottom: 1em;
+}

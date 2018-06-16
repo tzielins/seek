@@ -6,30 +6,72 @@
 
 <div class="row">
   <div class="col-md-9">
-    <%= render :partial=>"home_description_box" -%>
+    <%#= render :partial=>"home_description_box" -%>
+
+    <!-- TZ REECE -->
+    <div id="homepage">
+
+      <h2>Welcome to the Reece Group<br>research output database</h2>
+
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            This is our research output database, where you can find our data files, models and analysis results.
+          </p>
+          <p>
+            Our data are organised into Investigation, Study, Assay structure which makes browsing easy and
+            clearly marks relationship between each data. Use the top menu to access our output. You can follow the
+            resources by double clicking in the ISA graph or by using direct links in each of the screens.
+          </p>
+          <p>Not all of our output is publicly available, please contact us at<br> sarah.reece (@) ed.ac.uk<br>
+          if you would like to start collaboration with us and get private access.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+          We are interested in uncovering the strategies parasites have evolved to cope with the challenges and
+          opportunities of their lifestyle.
+
+          <%= image(:bio_clock_pic, class: 'img-responsive img-thumbnail', style: 'margin-top: 1em;') %>
+          <span style="font-size: smaller;">credit: EviMalar, Jamie Hall, Edward Ross, Wellcome Trust</span>
+
+          </p>
+          <p>
+          Our focus is malaria (Plasmodium) parasites. Malaria parasites and their relatives cause some of the most
+          serious infectious diseases of humans, domestic animals, livestock, and wildlife. They are also extremely
+          interesting creatures and make a useful model system.
+          </p>
+          <p>Please check our group <a href="http://reecelab.science">webpage</a> to find more about us and
+            our research.</p>
+        </div>
+      </div>
+
+    </div>
 
     <% if Seek::Config.front_page_buttons_enabled %>
-        <%= render :partial=>"home_buttons" -%>
+        <%= render :partial => "home_buttons" -%>
     <% end %>
 
     <% if logged_in_and_registered? %>
-        <%= render :partial=>"user_activity" -%>
+        <%= render :partial => "user_activity" -%>
     <% else %>
-        <%= render :partial=>"home_activity_notifications" -%>
+        <%= render :partial => "home_activity_notifications" -%>
     <% end %>
   </div>
 
   <div class="col-md-3">
-    <%= render :partial=>"gadgets/announcements_gadget" if show_announcements? %>
+    <% if false # TZ disabled menu block   %>
+        <%= render :partial => "gadgets/announcements_gadget" if show_announcements? %>
 
-    <%= render :partial=>"home_news_feeds" -%>
+        <%= render :partial => "home_news_feeds" -%>
 
-    <% if Seek::Config.tagging_enabled %>
-        <div id="sidebar_tag_cloud">
-          <% cache 'sidebar_tag_cloud', skip_digest: true do -%>
-              <%= render :partial=>"gadgets/tag_cloud_gadget" %>
-          <% end -%>
-        </div>
-    <% end %>
+        <% if Seek::Config.tagging_enabled %>
+            <div id="sidebar_tag_cloud">
+              <% cache 'sidebar_tag_cloud', skip_digest: true do -%>
+                  <%= render :partial => "gadgets/tag_cloud_gadget" %>
+              <% end -%>
+            </div>
+        <% end %>
+    <% end # TZ disabled menu block  %>
   </div>
 </div>

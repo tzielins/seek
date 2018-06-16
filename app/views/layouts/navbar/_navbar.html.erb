@@ -7,11 +7,17 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <% if Seek::Config.header_image_enabled %>
-        <%= link_to root_path,:class=>"logo_link" do %>
-            <%= header_logo_image %>
+      <% if false # TZ disabled menu block  %>
+        <% if Seek::Config.header_image_enabled %>
+          <%= link_to root_path,:class=>"logo_link" do %>
+              <%= header_logo_image %>
+          <% end %>
         <% end %>
-      <% end %>
+      <% end # TZ disabled menu block  %>
+
+        <%= link_to root_path,:class=>"logo_link" do %>
+          <%= image(:reece_logo, style: 'margin-top: 1em; margin-bottom: 1em; margin-right: 2em;') %>
+        <% end %>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -20,7 +26,7 @@
       <ul class="nav navbar-nav">
         <%= render :partial => "layouts/navbar/browse_menu" %>
         <%= render :partial => "layouts/navbar/create_menu" if logged_in_and_registered? %>
-        <%= render :partial => "layouts/navbar/help_menu" if Seek::Config.documentation_enabled %>
+        <%#= render :partial => "layouts/navbar/help_menu" if Seek::Config.documentation_enabled #%>
       </ul>
 
       <%= render :partial => 'layouts/navbar/search_bar' if Seek::Config.solr_enabled %>
