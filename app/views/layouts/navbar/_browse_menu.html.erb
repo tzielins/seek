@@ -6,13 +6,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li role="presentation" class="dropdown-header visible-md">Browse</li>
-    <li role="presentation" class="dropdown-header"><%= t("menu.yellow_pages") -%></li>
-    <% if Seek::Config.programmes_enabled %>
-        <li><%= link_to t('programme').pluralize, programmes_path %></li>
-    <% end %>
-    <li><%= link_to t("project").pluralize, projects_path %></li>
-    <li><%= link_to "Institutions", institutions_path %></li>
-    <li><%= link_to "People", people_path %></li>
 
     <li role="presentation" class="dropdown-header"><%= t("menu.isa") -%></li>
     <li><%= link_to t("investigation").pluralize, investigations_path %></li>
@@ -26,7 +19,16 @@
     <% end %>
     <li><%= link_to t("sop").pluralize, sops_path %></li>
     <li><%= link_to "Publications", publications_path %></li>
-    <li><%= link_to t("document").pluralize, documents_path %></li>
+    <li><%#= link_to t("document").pluralize, documents_path %></li>
+
+    <li role="presentation" class="dropdown-header"><%= t("menu.yellow_pages") -%></li>
+    <% if Seek::Config.programmes_enabled %>
+        <li><%= link_to t('programme').pluralize, programmes_path %></li>
+    <% end %>
+    <li><%= link_to t("project").pluralize, projects_path %></li>
+    <li><%#= link_to "Institutions", institutions_path %></li>
+    <li><%= link_to "People", people_path %></li>
+
 
     <% if false # TZ disabled menu block  %>
       <li role="presentation" class="dropdown-header"><%= t("menu.activities") -%></li>
